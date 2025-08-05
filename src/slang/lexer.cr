@@ -119,12 +119,17 @@ module Slang
       when '='
         consume_output
       when '|', '\''
-        @token.escaped = false
-        @token.text_block = true
-        @token.append_whitespace = (current_char == '\'')
-        next_char ; skip_whitespace ; consume_text
-        text = @token.value || ""
-        @raw_text_column = (@column_number - text.size) + 2 # +2 for the quotation marks
+        if inline
+          @token.escaped = false
+          consume_text
+        else
+          @token.escaped = false
+          @token.text_block = true
+          @token.append_whitespace = (current_char == '\'')
+          next_char ; skip_whitespace ; consume_text
+          text = @token.value || ""
+          @raw_text_column = (@column_number - text.size) + 2 # +2 for the quotation marks
+        end
       when '<'
         @token.escaped = false
         consume_text

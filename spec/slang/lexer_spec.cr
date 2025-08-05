@@ -319,6 +319,101 @@ describe Slang::Lexer do
   end
 
   describe "html tags with interpolation" do
+    string = %{span \#{one}  \#{two}  \#{three}}
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a span element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("span")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%[one])
+        token.column_number.should eq(6)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["  "])
+        token.column_number.should eq(12)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, fourth token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%[two])
+        token.column_number.should eq(14)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, fifth token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["  "])
+        token.column_number.should eq(20)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, sixth token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%[three])
+        token.column_number.should eq(22)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+        token.inline.should be_true
+      end
+    end
+  end
+
+  describe "html tags with interpolation" do
     string = %[div foo \#{bar} baz]
     lexer = Slang::Lexer.new(string)
 

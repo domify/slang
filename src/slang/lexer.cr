@@ -350,6 +350,7 @@ module Slang
           end
           if current_char == '}'
             next_char
+            @parsing_text = true
             break
           end
 

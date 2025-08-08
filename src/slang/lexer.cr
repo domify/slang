@@ -111,8 +111,18 @@ module Slang
           consume_element
         end
       when ':'
-        @token.escaped = false
-        consume_inline_element
+        if inline
+          if @last_token.type == :ELEMENT
+            @token.escaped = false
+            consume_inline_element
+          else
+            @token.escaped = false
+            consume_text
+          end
+        else
+          @token.escaped = false
+          consume_inline_element
+        end
       when '-'
         @token.escaped = false
         consume_control

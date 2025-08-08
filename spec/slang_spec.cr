@@ -66,6 +66,36 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
     HTML
   end
 
+  describe "edge cases" do
+    it "introduces control code" do
+      prefix = "my"
+      render(%{span \#{prefix}-5}).should eq <<-HTML
+      <span>my</span>
+      HTML
+    end
+
+    it "introduces control code unless escaped" do
+      prefix = "my"
+      render(%{span \#{prefix}\\-5}).should eq <<-HTML
+      <span>my-5</span>
+      HTML
+    end
+
+    it "produces output" do
+      var = "x"
+      render(%{code \#{var}=5}).should eq <<-HTML
+      <code>x5</code>
+      HTML
+    end
+
+    it "produces output unless escaped" do
+      var = "x"
+      render(%{code \#{var}\\=5}).should eq <<-HTML
+      <code>x=5</code>
+      HTML
+    end
+  end
+
   describe "attributes" do
     it "accepts string values" do
       render(%{span attr="hello"}).should eq <<-HTML

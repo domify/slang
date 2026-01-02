@@ -37,7 +37,11 @@ module Slang
     # The token indicates the first line of a block of verbatim text.
     property :text_block
 
+    # Splat attribute variable name
+    property :splat
+
     @name : String?
+    @splat : String?
     @value : String?
 
     def initialize

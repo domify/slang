@@ -50,7 +50,7 @@ module Slang
         @raw_text_column = 0
       end
 
-      inline = @raw_text_column > 0 || (@last_token.type.in?([:ELEMENT, :ATTRIBUTE, :TEXT]) && @last_token.line_number == @line_number)
+      inline = @raw_text_column > 0 || (@last_token.type.in?([:ELEMENT, :ATTRIBUTE, :SPLAT, :TEXT]) && @last_token.line_number == @line_number)
 
       if @column_number <= @code_block_column_number
         @code_block_column_number = 0
@@ -145,6 +145,12 @@ module Slang
         consume_text
       when '/'
         consume_comment
+      when '*'
+        if inline && @last_token.type.in?([:ELEMENT, :ATTRIBUTE])
+          consume_splat
+        else
+          unexpected_char
+        end
       else
         if inline
           # matching pairs of open/close chars should be ignored
@@ -255,6 +261,12 @@ module Slang
       else
         name
       end
+    end
+
+    private def consume_splat
+      @token.type = :SPLAT
+      next_char # skip '*'
+      @token.value = consume_html_valid_name
     end
 
     private def consume_comment

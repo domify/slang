@@ -141,6 +141,13 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
       HTML
     end
 
+    it "joins class attributes" do
+      attrs = {"class" => "bar", "id" => "baz"}
+      render("span.foo *attrs").should eq <<-HTML
+      <span class="foo bar" id="baz"></span>
+      HTML
+    end
+
     it "strips trailing whitespace" do
       render(%{span.quuz class=""}).should eq <<-HTML
       <span class="quuz"></span>
@@ -172,6 +179,13 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
     it "should allow = at the end of attribute values" do
       render(%{h1 id="asdf=" Hello}).should eq <<-HTML
       <h1 id="asdf=">Hello</h1>
+      HTML
+    end
+
+    it "should support splat syntax for attributes" do
+      attrs = {"class" => "foo", "id" => "bar"}
+      render("span *attrs").should eq <<-HTML
+      <span class="foo" id="bar"></span>
       HTML
     end
 

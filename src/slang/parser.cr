@@ -26,6 +26,14 @@ module Slang
           end
           parent.nodes << Nodes::Attribute.new(parent, token)
           next_token
+        when :SPLAT
+          parent = @current_node
+          # find the parent
+          until parent.is_a?(Nodes::Element)
+            parent = parent.parent
+          end
+          parent.token.splat = token.value
+          next_token
         when :ELEMENT, :COMMENT, :CONTROL, :CODE, :OUTPUT, :TEXT
           parent = @current_node
           # find the parent
